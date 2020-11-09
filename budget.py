@@ -41,6 +41,7 @@ class Category:
 
     def get_balance(self):
         return self.balance
+        
 
 def create_spend_chart(categories):
     return
