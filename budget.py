@@ -32,7 +32,7 @@ class Category:
     
     def withdraw(self,amount,description):
         wd=Amount(-1*amount,description)
-        if self.balance-amount>=0:
+        if self.check_funds(amount):
             self.deposit_list.append(wd)
             self.balance+=wd.getTot()["amount"]
             return True
@@ -41,7 +41,24 @@ class Category:
 
     def get_balance(self):
         return self.balance
-        
+    
+    def transfer(self,amount,dest):
+        descr_dest="Transfer from "
+        descr_dest+=str(self)
+        descr_src="Transfer to "
+        descr_src+=str(dest)
+
+        if self.withdraw(amount,descr_src)==True:
+            dest.deposit(amount,descr_dest)
+            return True
+        else:
+            return False
+
+    def check_funds(self,amount):
+        if amount>self.balance:
+            return False
+        else:
+            return True
 
 def create_spend_chart(categories):
     return
