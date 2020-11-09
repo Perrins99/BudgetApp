@@ -4,7 +4,7 @@ class Amount:
     creo una classe Amount che contiene amount e description come da specifiche
     e salvo negli oggetti di classe Category una lista di oggetti Amount
     '''
-    tot={}
+    tot={"amount":0,"description":""}
 
     def __init__(self,am,descr=""):
         self.tot["amount"]=am
@@ -17,20 +17,66 @@ class Amount:
 class Category:
 
     title=""
-    deposit_list= list()
+    deposit_list=[]
     balance=0
 
-    
-
     def __init__(self,name):
-        title=name
+        self.title=name
     
-    def deposit(self,amount,description):
+    def __str__(self):
+        final_string=""
+        length=int((30-len(self.title))/2)
+
+        for i in range(0,length):
+            final_string+="*"
+
+        final_string+=self.title
+        for i in range(0,length):
+            final_string+="*"
+
+        final_string+="\n"
+
+        for x in self.deposit_list:
+            y=x.getTot()["description"]
+            y=y[0:23]
+            z=float(x.getTot()["amount"])
+
+            final_string+=y
+            l=len(y)
+            if l<23:
+                for i in range(l,23):
+                    final_string+=" "
+            
+            z=str(z)
+            l=len(z)
+            if l<7:
+                for i in range(l,7):
+                    final_string+=" "
+            final_string+=z
+            final_string+="\n"
+        final_string+="Total: "
+        final_string+=str(self.balance)
+
+        return final_string
+
+    def get_balance(self):
+        return self.balance
+    
+    def getTitle(self):
+        return self.title
+        
+    def deposit(self,amount,description=""):
+        
+        if description!="":
+            description=str(description)
         dep=Amount(amount,description)
         self.deposit_list.append(dep)
         self.balance+=dep.getTot()["amount"]
     
-    def withdraw(self,amount,description):
+    def withdraw(self,amount,description=""):
+        
+        if description!="":
+            description=str(description)
         wd=Amount(-1*amount,description)
         if self.check_funds(amount):
             self.deposit_list.append(wd)
@@ -39,15 +85,11 @@ class Category:
         else:
             return False
 
-    def get_balance(self):
-        return self.balance
-    
     def transfer(self,amount,dest):
         descr_dest="Transfer from "
-        descr_dest+=str(self)
+        descr_dest+=self.getTitle()
         descr_src="Transfer to "
-        descr_src+=str(dest)
-
+        descr_src+=dest.getTitle()
         if self.withdraw(amount,descr_src)==True:
             dest.deposit(amount,descr_dest)
             return True
