@@ -36,9 +36,9 @@ class Category:
         final_string+="\n"
 
         for x in self.ledger:
-            y=x.getTot()["description"]
+            y=x["description"]
             y=y[0:23]
-            z=float(x.getTot()["amount"])
+            z=float(x["amount"])
 
             final_string+=y
             l=len(y)
@@ -70,7 +70,7 @@ class Category:
             description=str(description)
         
         dep=Amount(amount,description)
-        self.ledger.append(dep)
+        self.ledger.append(dep.getTot())
         self.balance+=dep.getTot()["amount"]
         
     
@@ -82,7 +82,7 @@ class Category:
         wd=Amount(-1*amount,description)
 
         if self.check_funds(amount):
-            self.ledger.append(wd)
+            self.ledger.append(wd.getTot())
             self.balance+=wd.getTot()["amount"]
             return True
         else:
