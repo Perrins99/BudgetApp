@@ -106,4 +106,72 @@ class Category:
             return True
 
 def create_spend_chart(categories):
-    return
+    
+    chart="Percentage spent by category\n"
+    '''
+    per ogni barra verticale stampare 3 trattini 
+    + 1 trattino finale
+    '''
+    
+    
+    percentages=[]
+    
+    sum=0
+    for x in categories:
+        for y in x.ledger:
+            if y["amount"]<0:
+                sum+=y["amount"]
+
+    part_sum=0
+    for x in categories:
+        for y in x.ledger:
+            if y["amount"]<0:
+                part_sum+=y["amount"]
+        percentages.append(part_sum*100/sum)
+        part_sum=0
+
+    k=100
+
+    while k>=0:
+        if k<100:
+            if k==0:
+                chart+="  "
+            else:
+                chart+=" "
+        
+        chart+=str(k)
+        chart+="|"
+        
+        for x in percentages:
+            if x>=k:
+                chart+=" o "
+            else:
+                chart+="   "
+            
+        chart+=" \n"
+        k-=10
+
+    chart+="    "
+    for x in range(0,len(categories)):
+        chart+="---"
+    chart+="-\n"
+
+    l=0
+    for x in categories:
+        if len(x.title)>l:
+            l=len(x.title)
+
+    for k in range(0,l):
+        chart+="     "
+        for x in categories:
+            if len(x.title)<k+1:
+                chart+=" "
+            else:
+                chart+=x.title[k]
+
+            chart+="  "
+        
+        if k!=l-1:
+            chart+="\n"
+
+    return chart
