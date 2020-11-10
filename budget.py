@@ -1,12 +1,11 @@
+import copy
+
 class Amount:
     
-    '''
-    creo una classe Amount che contiene amount e description come da specifiche
-    e salvo negli oggetti di classe Category una lista di oggetti Amount
-    '''
-    tot={"amount":0,"description":""}
+    
 
     def __init__(self,am,descr=""):
+        self.tot={"amount":0,"description":""}
         self.tot["amount"]=am
         self.tot["description"]=descr
     
@@ -16,12 +15,12 @@ class Amount:
 
 class Category:
 
-    title=""
-    deposit_list=[]
-    balance=0
+
 
     def __init__(self,name):
         self.title=name
+        self.ledger=list()
+        self.balance=0
     
     def __str__(self):
         final_string=""
@@ -36,7 +35,7 @@ class Category:
 
         final_string+="\n"
 
-        for x in self.deposit_list:
+        for x in self.ledger:
             y=x.getTot()["description"]
             y=y[0:23]
             z=float(x.getTot()["amount"])
@@ -47,7 +46,7 @@ class Category:
                 for i in range(l,23):
                     final_string+=" "
             
-            z=str(z)
+            z=str("{:7.2f}".format(z))
             l=len(z)
             if l<7:
                 for i in range(l,7):
@@ -69,17 +68,21 @@ class Category:
         
         if description!="":
             description=str(description)
+        
         dep=Amount(amount,description)
-        self.deposit_list.append(dep)
+        self.ledger.append(dep)
         self.balance+=dep.getTot()["amount"]
+        
     
     def withdraw(self,amount,description=""):
         
         if description!="":
             description=str(description)
+        
         wd=Amount(-1*amount,description)
+
         if self.check_funds(amount):
-            self.deposit_list.append(wd)
+            self.ledger.append(wd)
             self.balance+=wd.getTot()["amount"]
             return True
         else:
